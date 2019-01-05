@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drum</title>
+</head>
+
+<style>
+    *
+    {
+        /* box-sizing: border-box; 這個元素的內距和邊框將不會增加元素本身的寬度, 該屬性從 IE8+ 之後就開始支援*/
+        box-sizing: border-box;
+    }
+
+    body, html
+    {
+        /* 初始化元件的邊距 */
+        margin: 0;
+        padding: 0;
+    }
+
+    body
+    {
+        width: 100vw;
+        height: 100vh;
+        background-image: url("../src/background/unsplash-min.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+
+    .container
+    {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        height: 100vh;
+        padding: 0 15px;
+    }
+
+    .key-wrapper
+    {
+        width: 8rem;
+        padding: 15px;
+        margin: 0 auto;
+        background: #333a;
+        border: 1px solid #daa;
+        text-align: center;
+        transition: all 0.1s;
+    }
+
+    .down
+    {
+        transform: scale(1.1);
+        border: 3px solid #da2;
+    }
+
+    .key-text
+    {
+        color: #fff;
+        font-size: 18pt;
+    }
+
+    .key-discr
+    {
+        display: block;
+        color: #da2;
+    }
+</style>
+
+<body>
+    <div>
+        <audio src="sounds/clap.wav"></audio>
+        <audio src="sounds/hihat.wav"></audio>
+        <audio src="sounds/kick.wav"></audio>
+        <audio src="sounds/openhat.wav"></audio>
+        <audio src="sounds/boom.wav"></audio>
+        <audio src="sounds/ride.wav"></audio>
+        <audio src="sounds/snare.wav"></audio>
+        <audio src="sounds/tom.wav"></audio>
+        <audio src="sounds/tink.wav"></audio>
+    </div>
+    <div class="container">
+        <div class="key-wrapper">
+            <kbd class="key-text">A</kbd>
+            <span class="key-discr">CLAP</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">S</kbd>
+            <span class="key-discr">HiHAT</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">D</kbd>
+            <span class="key-discr">KICK</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">F</kbd>
+            <span class="key-discr">OPENHAT</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">G</kbd>
+            <span class="key-discr">BOOM</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">H</kbd>
+            <span class="key-discr">RIDE</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">J</kbd>
+            <span class="key-discr">SNARE</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">K</kbd>
+            <span class="key-discr">TOM</span>
+        </div>
+        <div class="key-wrapper">
+            <kbd class="key-text">L</kbd>
+            <span class="key-discr">TINK</span>
+        </div>
+    </div>
+</body>
+
+<script>
+    const doc = document;
+    let keys = [];
+
+    doc.addEventListener("keydown", function(e)
+    {
+        let down = doc.querySelector(".down");
+        if (down)
+        {
+            down.classList.remove("down");
+        }
+
+        if (keys.length == 0)
+        {
+            doc.querySelectorAll("kbd").forEach(k => keys.push(k.textContent.toLowerCase()));
+        }
+
+        let index = keys.indexOf(e.key.toLowerCase());
+        if (index === -1){ return; }
+
+        let aduios = doc.querySelectorAll("audio");
+        let wrappers = doc.querySelectorAll(".key-wrapper");
+        // 直接再次播放 currentTime = 0;
+        aduios[index].currentTime = 0;
+        aduios[index].play();
+        if (!down)
+        {
+            wrappers[index].classList.add("down");
+        }
+    });
+
+    doc.querySelectorAll(".key-wrapper").forEach(wrapper => wrapper.addEventListener("transitionend", function(e)
+    {
+        if (e.propertyName != "transform"){ return; }
+        this.classList.remove("down");
+    }));
+</script>
+</html>
