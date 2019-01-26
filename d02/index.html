@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clock</title>
+</head>
+
+<style>
+    *
+    {
+        box-sizing: border-box;
+    }
+
+    html, body
+    {
+        padding: 0;
+        margin: 0;
+    }
+
+    .container
+    {
+        display: flex;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .background
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        filter: blur(3px);
+        background-image: url("../src/background/267390427f02933cd80db62bde1acf81.JPG");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        filter: blur(.5);
+    }
+
+    .clock
+    {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        margin: 0 auto;
+        border-radius: 50%;
+        border: 10px solid #FFF;
+        background: #aaaa;
+    }
+
+    /* key part */
+    /* default value = transform-origin: 50%; */
+    .pointer
+    {
+        position: absolute;
+        transform: rotate(0deg);
+        transform-origin: bottom;
+        transition: all .6s;
+        transition-timing-function: cubic-bezier(1, 0, 1, -0.35);
+        color: #fff;
+    }
+
+    .hour
+    {
+        top: 90px;
+        left: calc(50% - 4px);
+        height: 150px;
+        width: 8px;
+        background: #111;
+        z-index: 1;
+    }
+
+    .min
+    {
+        top: 40px;
+        left: calc(50% - 3px);
+        height: 200px;
+        width: 6px;
+        background: #666;
+        z-index: 3;
+    }
+
+    .sec
+    {
+        top: 20px;
+        left: calc(50% - 1px);
+        height: 220px;
+        width: 2px;
+        background: #d25;
+        z-index: 5;
+    }
+
+    .dot
+    {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border: 1px solid #FFF;
+        background: #aaaa;
+        border-radius: 50%;
+        z-index: 100;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="clock">
+            <div class="dot"></div>
+            <div class="pointer hour"></div>
+            <div class="pointer min"></div>
+            <div class="pointer sec"></div>
+        </div>
+        <div class="background"></div>
+    </div>
+</body>
+
+<script>
+function Init()
+{
+    let time = getInitDeg();
+    let { pointerSec, pointerMin, pointerHour } = getPointer();
+    pointerSec.setAttribute("style", `transform: rotate(${time.secDeg}deg)`);
+    pointerMin.setAttribute("style", `transform: rotate(${time.minDeg}deg)`);
+    pointerHour.setAttribute("style", `transform: rotate(${time.hourDeg}deg)`);
+}
+
+function getInitDeg()
+{
+    let now = new Date();
+    let hour = now.getHours();
+    let min = now.getMinutes();
+    let sec = now.getSeconds();
+
+    return {
+        hourDeg: ((hour * 30) % 360) + Math.floor(min / 2),
+        minDeg: (min * 6) + Math.floor(sec / 10),
+        secDeg: sec * 6
+    };
+}
+
+function getPointer()
+{
+    return {
+        pointerSec: document.querySelector('.sec'),
+        pointerMin: document.querySelector('.min'),
+        pointerHour: document.querySelector('.hour')
+    };
+}
+
+function checkClock()
+{
+    let { pointerSec, pointerMin, pointerHour } = getPointer();
+
+    let secDeg = pointerSec.getAttribute("style").replace(/\D*/g, "");
+    let minDeg = pointerMin.getAttribute("style").replace(/\D*/g, "");
+    let hourDeg = pointerHour.getAttribute("style").replace(/\D*/g, "");
+
+    if (!Number.isSafeInteger(parseInt(secDeg)))
+    {
+        location.reload();
+    }
+
+    //#region 提示文字
+        // pointerSec.innerHTML = `${((parseInt(secDeg) + 6) % 360) / 6}`;
+        // pointerMin.innerHTML = `${((parseInt(minDeg) % 360) / 6).toFixed(1)}`;
+        // pointerHour.innerHTML = `${((parseInt(hourDeg) % 360) / 30).toFixed(2)}`;
+        // console.log(secDeg, minDeg, hourDeg);
+    //#endregion
+
+    pointerSec.setAttribute("style", `transform: rotate(${parseInt(secDeg) + 6}deg)`);
+    
+    if (secDeg % (6 * 10) == 0)
+    {
+        // 分針每秒走0.1度, 10秒1度
+        // 每10秒(60度)更新一次
+        pointerMin.setAttribute("style", `transform: rotate(${parseInt(minDeg) + 1}deg)`);
+    }
+
+    if (secDeg % (6 * 120) == 0)
+    {
+        // 時針每分鐘走0.5度, 2分鐘1度
+        // 每2分鐘(12度)更新一次
+        pointerHour.setAttribute("style", `transform: rotate(${parseInt(hourDeg) + 1}deg)`);
+    }
+}
+
+Init();
+setInterval(checkClock, 1000);
+
+</script>
+
+</html>
