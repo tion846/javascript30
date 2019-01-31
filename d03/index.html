@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Colorpicker</title>
+</head>
+
+<style>
+    *
+    {
+        box-sizing: border-box;
+    }
+
+    body,
+    html
+    {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .wrapper
+    {
+        display: flex;
+        justify-content: space-evenly;
+        padding: 15px;
+    }
+
+    .stack
+    {
+        background: #cccc;
+    }
+    
+    .img
+    {
+        display: block;
+        /* 在div中的圖片會與底部會有一個間距，使用block可以消除間距，該間距與文字有關 */
+        margin: 0 auto;
+    }
+
+    .img-wrapper
+    {
+        width: fit-content;
+        margin: 0 auto;
+    }
+</style>
+
+<body style="background: #ccc3; padding: 15px;">
+    <div></div>
+    <div class="wrapper">
+        <div class="stack">
+            <label for="spacing">Spacing: </label>
+            <input id="spacing" type="range" value="0" min="0" max="100">
+        </div>
+        <div class="stack">
+            <label for="blur">Blur: </label>
+            <input id="blur" type="range" value="0" min="0" max="20">
+        </div>
+        <div class="stack">
+            <label for="colorPicker">Color: </label>
+            <input id="colorPicker" type="color" value="#f33f33">
+        </div>
+    </div>
+    <div class="img-wrapper">
+        <img class="img" src="../src/background/people-2591874_1280.jpg" alt="">
+    </div>
+</body>
+
+<script>
+    function borderInit()
+    {
+        let spacing = document.querySelector("#spacing").value;
+        let color = document.querySelector("#colorPicker").value;
+        setImgBorder(spacing, color);
+    }
+
+    function spacingHandle()
+    {
+        let color = document.querySelector("#colorPicker").value;
+        setImgBorder(this.value, color);
+    }
+
+    function blurHandle()
+    {
+        document.querySelector(".img").setAttribute("style", `filter: blur(${this.value}px)`);
+    }
+
+    function colorHandle()
+    {
+        let spacing = document.querySelector("#spacing").value;
+        setImgBorder(spacing, this.value);
+    }
+
+    function setImgBorder(spacing, color)
+    {
+        document.querySelector(".img-wrapper").setAttribute("style", `border: ${spacing}px solid ${color}`);
+    }
+
+    borderInit();
+    let spacing = document.querySelector("#spacing");
+    let blur = document.querySelector("#blur");
+    let colorPicker = document.querySelector("#colorPicker");
+    // ListenerEventer: mousemove
+    spacing.addEventListener("mousemove", spacingHandle);
+    spacing.addEventListener("change", spacingHandle);
+    blur.addEventListener("mousemove", blurHandle);
+    blur.addEventListener("change", blurHandle);
+    colorPicker.addEventListener("mousemove", colorHandle);
+    colorPicker.addEventListener("change", colorHandle);
+</script>
+</html>
