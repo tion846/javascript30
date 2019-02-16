@@ -8,6 +8,13 @@
 </head>
 
 <style>
+    :root
+    {
+        --background: #f33f33;
+        --spacing: 0px;
+        --blur: 0px;
+    }
+
     *
     {
         box-sizing: border-box;
@@ -34,15 +41,17 @@
     
     .img
     {
-        display: block;
         /* 在div中的圖片會與底部會有一個間距，使用block可以消除間距，該間距與文字有關 */
+        display: block;
         margin: 0 auto;
+        filter: blur(var(--blur));
     }
 
     .img-wrapper
     {
         width: fit-content;
         margin: 0 auto;
+        border: var(--spacing) solid var(--background); 
     }
 </style>
 
@@ -68,45 +77,22 @@
 </body>
 
 <script>
-    function borderInit()
+    function cssHandle()
     {
-        let spacing = document.querySelector("#spacing").value;
-        let color = document.querySelector("#colorPicker").value;
-        setImgBorder(spacing, color);
+        var key = `--${this.id}`;
+        var value = `${this.value}px`;
+        document.documentElement.style.setProperty(key, value);
+        // console.log(getComputedStyle(document.documentElement).getPropertyValue("--spacing"));
     }
-
-    function spacingHandle()
-    {
-        let color = document.querySelector("#colorPicker").value;
-        setImgBorder(this.value, color);
-    }
-
-    function blurHandle()
-    {
-        document.querySelector(".img").setAttribute("style", `filter: blur(${this.value}px)`);
-    }
-
+    
     function colorHandle()
     {
-        let spacing = document.querySelector("#spacing").value;
-        setImgBorder(spacing, this.value);
+        document.documentElement.style.setProperty("--background", this.value);
     }
 
-    function setImgBorder(spacing, color)
-    {
-        document.querySelector(".img-wrapper").setAttribute("style", `border: ${spacing}px solid ${color}`);
-    }
-
-    borderInit();
-    let spacing = document.querySelector("#spacing");
-    let blur = document.querySelector("#blur");
-    let colorPicker = document.querySelector("#colorPicker");
-    // ListenerEventer: mousemove
-    spacing.addEventListener("mousemove", spacingHandle);
-    spacing.addEventListener("change", spacingHandle);
-    blur.addEventListener("mousemove", blurHandle);
-    blur.addEventListener("change", blurHandle);
-    colorPicker.addEventListener("mousemove", colorHandle);
-    colorPicker.addEventListener("change", colorHandle);
+    var inputRange = document.querySelectorAll("input[type=range]");
+    var inputColor = document.querySelector("input[type=color]");
+    inputRange.forEach(el => el.addEventListener("mousemove", cssHandle));
+    inputColor.addEventListener("change", colorHandle);
 </script>
 </html>
