@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flex Panel</title>
+    <style>
+        :root
+        {
+            box-sizing: border-box;
+        }
+
+        html, body
+        {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container
+        {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .panel
+        {
+            flex: 1;
+            display: flex;
+            flex-flow: column;
+            text-align: center;
+            align-items: center;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            transition: all .8s;
+        }
+        
+        .panel p
+        {
+            flex: 1;
+            margin: 0;
+            overflow: hidden;
+            color: #ffffff;
+            font-size: 3em;
+            line-height: 3em;
+            transition: all .5s .8s;
+        }
+
+        .panel p:first-child
+        {
+            transform: translateY(-100%);
+        }
+
+        .panel p:last-child
+        {
+            transform: translateY(100%);
+        }
+
+        .animal
+        {
+            background-image: url("../src/background/pexels-photo-1629066.jpeg");
+            background-position: 60%;
+        }
+
+        .ocean
+        {
+            background-image: url("../src/background/pexels-photo-457881.jpeg");
+        }
+
+        .person
+        {
+            background-image: url("../src/background/pexels-photo-433142.jpeg");
+        }
+
+        .bridge
+        {
+            background-image: url("../src/background/pexels-photo-1660006.jpeg");
+        }
+
+        .snow
+        {
+            background-image: url("../src/background/pexels-photo-948857.jpeg");
+        }
+
+        .active
+        {
+            flex: 4;
+        }
+
+        .panel.active p
+        {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel animal">
+            <p>Nekoねこ</p>
+            <p>Cat</p>
+            <p>貓</p>
+        </div>
+        <div class="panel ocean">
+            <p>Umi海</p>
+            <p>Ocean</p>
+            <p>海</p>
+        </div>
+        <div class="panel person">
+            <p>AoI青い</p>
+            <p>Blue</p>
+            <p>藍</p>
+        </div>
+        <div class="panel bridge">
+            <p>HaShi橋</p>
+            <p>Bridge</p>
+            <p>橋</p>
+        </div>
+        <div class="panel snow">
+            <p>YuKi雪</p>
+            <p>Snow</p>
+            <p>雪</p>
+        </div>
+    </div>
+</body>
+
+<script>
+    let panels = document.querySelectorAll(".panel");
+
+    panels.forEach(el => el.addEventListener("click", spreadSlider));
+    
+    function spreadSlider()
+    {
+        let active = document.querySelector(".active");
+        if (active)
+        {
+            active.classList.toggle("active");
+            if (active == this)
+            {
+                return;
+            }
+        }
+        this.classList.add("active");
+    }
+</script>
+</html>
